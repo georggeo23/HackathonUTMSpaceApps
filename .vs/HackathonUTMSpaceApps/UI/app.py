@@ -1,17 +1,30 @@
 from shiny import App, render, ui
 import pandas as pd
 import plotly.express as px
+import os
 
-# Load your dataset with the correct path
-emissions_data = pd.read_csv('HackathonUTMSpaceApps\data\OilGasData.csv')
+# Debugging: Check current working directory
+print("Current working directory:", os.getcwd())
 
-# Create a plotly figure using the correct column names
-fig = px.line(emissions_data, 
-              x="Reference Year",  # Ensure this matches your CSV column name
+# Use absolute path to ensure the file is found
+file_path = r'C:\Users\tibaa\OneDrive\Desktop\HacakthonUTMSpaceApp\HackathonUTMSpaceApps\.vs\HackathonUTMSpaceApps\data\GHG.csv'
+
+# Check if the file exists
+if os.path.exists(file_path):
+    print("File exists:", file_path)
+else:
+    print("File does not exist:", file_path)
+
+# Load the dataset
+ghg_data = pd.read_csv(file_path)
+
+# Create a Plotly figure using the correct column names
+fig = px.line(ghg_data, 
+              x="Reference Year",  # Make sure this matches your CSV column name
               y="Total Emissions (CO2e)", 
               title="Total Emissions (CO2e) from Oil and Gas Facilities Over Time")
 
-# Define UI
+# Define the UI
 app_ui = ui.page_fluid(
     ui.h2("Tell a Climate Story"),
     ui.layout_sidebar(
@@ -27,7 +40,7 @@ app_ui = ui.page_fluid(
 # Define server logic
 def server(input, output, session):
     @output
-    
+    @render.plot  # Add this decorator to render the plot
     def viz():
         return fig
 
