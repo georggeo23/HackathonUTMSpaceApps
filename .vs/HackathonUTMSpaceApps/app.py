@@ -1,25 +1,23 @@
 from shiny import App, render, ui
 import pandas as pd
-import plotly.express as px
 
-# Load your dataset with the correct path
-emissions_data = pd.read_csv('data/OilGasData.csv')
+# Load your datasets
+ghg_data = pd.read_csv('data/GHG.csv')
+oil_gas_data = pd.read_csv('data/OilGasData.csv')
 
-# Create a plotly figure using the correct column names
-fig = px.line(emissions_data, 
-              x="Reference Year",  # Ensure this matches your CSV column name
-              y="Total Emissions (CO2e)", 
-              title="Total Emissions (CO2e) from Oil and Gas Facilities Over Time")
+# Check the datasets (optional)
+print(ghg_data.head())
+print(oil_gas_data.head())
 
 # Define UI
 app_ui = ui.page_fluid(
-    ui.h2("Floods, Fires, Disasters : Climate Change"),
+    ui.h2("Tell a Climate Story"),
     ui.layout_sidebar(
         ui.sidebar(
             ui.input_select("page", "Choose a page", ["Home", "Emissions Data", "Visualizations", "Stories"]),
         ),
-        ui.panel_absolute(  # Use ui.panel for the main content area
-            ui.output_plot("viz")
+        ui.panel_absolute(
+            ui.output_text("content")  # This will show content based on page selection
         )
     )
 )
@@ -27,9 +25,16 @@ app_ui = ui.page_fluid(
 # Define server logic
 def server(input, output, session):
     @output
-    
-    def viz():
-        return fig
+    @render.text  # Render the text based on the selected page
+    def content():
+        if input.page == "Home":
+            return "Welcome to the Climate Story App!"
+        elif input.page == "Emissions Data":
+            return "Here you can explore emissions data."
+        elif input.page == "Visualizations":
+            return "This page will have visualizations."
+        elif input.page == "Stories":
+            return "Read stories about climate impact."
 
 # Create the app
 app = App(app_ui, server)
@@ -37,3 +42,4 @@ app = App(app_ui, server)
 # Run the app
 if __name__ == "__main__":
     app.run()
+
