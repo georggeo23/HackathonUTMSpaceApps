@@ -1,22 +1,23 @@
 from shiny import App, render, ui
 import pandas as pd
 import plotly.express as px
+from pathlib import Path
 import os
 
 # Debugging: Check current working directory
 print("Current working directory:", os.getcwd())
 
-# Use absolute paths for both datasets
-ghg_file_path = r'C:\Users\tibaa\OneDrive\Desktop\HacakthonUTMSpaceApp\HackathonUTMSpaceApps\.vs\HackathonUTMSpaceApps\data\GHG.csv'
-oilgas_file_path = r'C:\Users\tibaa\OneDrive\Desktop\HacakthonUTMSpaceApp\HackathonUTMSpaceApps\.vs\HackathonUTMSpaceApps\data\OilGasData.csv'
+# Correct file paths using Path from pathlib to handle paths dynamically
+ghg_file_path = Path(__file__).parent / 'data/GHG.csv'
+oilgas_file_path = Path(__file__).parent / 'data/OilGasData.csv'
 
 # Check if the files exist
-if os.path.exists(ghg_file_path):
+if ghg_file_path.exists():
     print("File exists:", ghg_file_path)
 else:
     print("File does not exist:", ghg_file_path)
 
-if os.path.exists(oilgas_file_path):
+if oilgas_file_path.exists():
     print("File exists:", oilgas_file_path)
 else:
     print("File does not exist:", oilgas_file_path)
@@ -27,7 +28,7 @@ oilgas_data = pd.read_csv(oilgas_file_path)
 
 # Create Plotly figure for GHG data
 ghg_fig = px.line(ghg_data, 
-              x="Year",  # Corrected to match your dataset
+              x="Year",  # Ensure this matches your CSV column name
               y="Total Greenhouse Gas Emissions (Mt CO2e)", 
               title="Total Greenhouse Gas Emissions (Mt CO2e) Over Time")
 
