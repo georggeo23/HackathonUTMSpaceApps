@@ -27,7 +27,7 @@ def server(input, output, session):
     @output
     @render.text  # Render the text based on the selected page
     def content():
-        if input.page == "Home":
+        if input == "Home":
             return "Welcome to the Climate Story App!"
         elif input.page == "Emissions Data":
             return "Here you can explore emissions data."
